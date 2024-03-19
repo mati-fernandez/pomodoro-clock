@@ -1,3 +1,3 @@
 # Pomodoro Clock
 
-➡ [View project](https://github.com/mati-fernandez/pomodoro-clock.git)
+➡ [View project](https://mati-fernandez.github.io/pomodoro-clock/)
