@@ -10,6 +10,7 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-top: 30px;
 }
 
 #leaf {
@@ -42,6 +43,7 @@ body {
   }
   #App {
     height: 90vh;
+    margin-top: 0;
   }
   #leaf {
     max-width: 40%;

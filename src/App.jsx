@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './App.css';
+import { FontAwesomeIcon } from 'react-fontawesome';
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
           <div id="break-label">
             <p>Break Length</p>
             <div id="break-length">State variable here, default 5</div>
+            <FontAwesomeIcon icon="fa-solid fa-circle-chevron-up" />
             <button id="break-decrement">BD</button>
             <button id="break-increment">BI</button>
           </div>
@@ -27,10 +29,11 @@ function App() {
           in mm:ss format (i.e. 25:00).
         </div>
         <div id="buttons-2">
-          <button id="start_stop">State value here</button>
-          <button id="reset">reset</button>
+          <button id="start_stop">Start/Stop</button>
+          <button id="reset">Reset</button>
         </div>
       </div>
+      <audio src="beep.mp3" preload="auto" id="beep"></audio>
     </div>
   );
 }
