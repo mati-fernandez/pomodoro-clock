@@ -6,87 +6,88 @@ import {
   faCircleChevronUp,
   faCirclePause,
   faCirclePlay,
+  faArrowsRotate,
 } from '@fortawesome/free-solid-svg-icons';
 
 function App() {
   const [breakLength, setBreakLength] = useState(5);
   const [sessionLength, setSessionLength] = useState(25);
+  const [timer, setTimer] = useState(sessionLength);
+  const [isRunning, setIsRunning] = useState(false);
 
   const handleBreakDecrease = () => {
-    if (breakLength > 0) setBreakLength(breakLength - 1);
+    if (breakLength > 0 && !isRunning) setBreakLength(breakLength - 1);
   };
 
   const handleBreakIncrease = () => {
-    if (breakLength < 60) setBreakLength(breakLength + 1);
+    if (breakLength < 60 && !isRunning) setBreakLength(breakLength + 1);
   };
 
   const handleSessionDecrease = () => {
-    if (sessionLength > 0) setSessionLength(sessionLength - 1);
+    if (sessionLength > 0 && !isRunning) setSessionLength(sessionLength - 1);
   };
 
   const handleSessionIncrease = () => {
-    if (sessionLength < 25) setSessionLength(sessionLength + 1);
+    if (sessionLength < 60 && !isRunning) setSessionLength(sessionLength + 1);
   };
 
   return (
     <div id="App">
       <img src="leaf.png" id="leaf"></img>
-      <div id="container">
+      <div id="tomato">
         <h1>25 + 5 Clock</h1>
         <div id="buttons">
           <div id="break-label">
-            <div>Break Length</div>
-            <div id="break-length">{breakLength}</div>
-            <FontAwesomeIcon
-              id="break-decrement"
-              icon={faCircleChevronDown}
-              size="2x"
-              cursor="pointer"
-              onClick={handleBreakDecrease}
-            />
-            {/* <button id="break-decrement">BD</button> */}
+            <p>Break Length</p>
             <FontAwesomeIcon
               id="break-increment"
               icon={faCircleChevronUp}
-              size="2x"
               cursor="pointer"
               onClick={handleBreakIncrease}
             />
-            {/* <button id="break-increment">BI</button> */}
-          </div>
-          <div id="session-label">
-            <div>Session Length</div>
-            <div id="session-length">{sessionLength}</div>
+            <div id="break-length" className="numbers">
+              {breakLength}
+            </div>
             <FontAwesomeIcon
               id="break-decrement"
               icon={faCircleChevronDown}
-              size="2x"
               cursor="pointer"
-              onClick={handleSessionDecrease}
+              onClick={handleBreakDecrease}
             />
-            {/* <button id="session-decrement">SD</button> */}
+          </div>
+          <div id="display">
+            <p id="timer-label">Session</p>
+            <div id="time-left" className="numbers">
+              {timer}
+            </div>
+          </div>
+          <div id="session-label">
+            <p>Session Length</p>
             <FontAwesomeIcon
               id="session-increment"
               icon={faCircleChevronUp}
-              size="2x"
               cursor="pointer"
               onClick={handleSessionIncrease}
             />
-            {/* <button id="session-increment">SI</button> */}
+            <div id="session-length" className="numbers">
+              {sessionLength}
+            </div>
+            <FontAwesomeIcon
+              id="session-decrement"
+              icon={faCircleChevronDown}
+              cursor="pointer"
+              onClick={handleSessionDecrease}
+            />
           </div>
         </div>
-        <div id="timer-label">Session</div>
-        <div id="time-left">
-          Paused or running, the value in this field should always be displayed
-          in mm:ss format (i.e. 25:00).
-        </div>
         <div id="buttons-2">
-          <button id="start_stop">
+          <div id="start_stop">
             <FontAwesomeIcon icon={faCirclePlay} />
             <FontAwesomeIcon icon={faCirclePause} />
-          </button>
-
-          <button id="reset">Reset</button>
+          </div>
+          <div id="reset">
+            <FontAwesomeIcon icon={faArrowsRotate} />
+          </div>
         </div>
       </div>
       <audio src="beep.mp3" preload="auto" id="beep"></audio>

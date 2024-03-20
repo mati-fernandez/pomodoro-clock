@@ -1,7 +1,7 @@
 body {
   margin: 0;
   height: 100vh;
-  background-color: rgb(0, 9, 0);
+  background-color: black;
 }
 
 #App {
@@ -21,21 +21,63 @@ body {
   z-index: 1;
 }
 
-#container {
+#tomato {
+  width: 550px;
   display: flex;
   justify-content: center;
   flex-direction: column;
   text-align: center;
   border-radius: 40%;
   background-image: radial-gradient(circle, #ff0000, #510000);
-  gap: 20px;
+  gap: 30px;
   height: 70vh;
+}
+
+h1 {
+  margin: 0;
+  font-size: 50px;
+}
+
+p {
+  font-size: x-large;
+  margin: 0;
+  margin-bottom: 20px;
+}
+
+#display > p {
+  margin-bottom: 0px;
 }
 
 #buttons {
   display: flex;
   justify-content: center;
   gap: 20px;
+  font-size: xx-large;
+}
+
+.numbers {
+  font-size: xx-large;
+}
+
+#session-label > .numbers,
+#break-label > .numbers {
+  margin: 10px;
+}
+
+#display {
+  box-shadow: 0px 0px 30px rgb(0, 0, 0);
+  border-radius: 20px;
+  background-color: black;
+  width: 150px;
+  align-self: center;
+  padding: 10px;
+}
+
+#buttons-2 {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+  font-size: xx-large;
 }
 
 @media (max-width: 500px) {
@@ -47,10 +89,40 @@ body {
     margin-top: 0;
   }
   #leaf {
-    max-width: 40%;
+    width: 150px;
   }
-  #container {
-    height: 50%;
+  #tomato {
+    width: 370px;
+    height: 300px;
+    gap: 20px;
+  }
+
+  h1 {
+    font-size: 30px;
+  }
+
+  p {
+    margin: 0;
+    margin-bottom: 10px;
+    font-size: medium;
+  }
+
+  #buttons {
     gap: 0;
+    font-size: xx-large;
+  }
+
+  .numbers {
+    font-size: x-large;
+  }
+
+  #display {
+    width: 80px;
+    margin-top: 15px;
+  }
+
+  #buttons-2 {
+    gap: 30px;
+    font-size: xx-large;
   }
 }
