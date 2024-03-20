@@ -12,8 +12,9 @@ import {
 function App() {
   const [breakLength, setBreakLength] = useState(5);
   const [sessionLength, setSessionLength] = useState(25);
-  const [timer, setTimer] = useState(sessionLength);
+  const [timer, setTimer] = useState(1500);
   const [isRunning, setIsRunning] = useState(false);
+  const [timerLabel, setTimerLabel] = useState('Session');
 
   const handleBreakDecrease = () => {
     if (breakLength > 0 && !isRunning) setBreakLength(breakLength - 1);
@@ -30,6 +31,42 @@ function App() {
   const handleSessionIncrease = () => {
     if (sessionLength < 60 && !isRunning) setSessionLength(sessionLength + 1);
   };
+
+  const formatTimer = () => {
+    const minutes = Math.floor(timer / 60);
+    const seconds = timer - minutes * 60;
+    const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
+    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+    return `${formattedMinutes}:${formattedSeconds}`;
+  };
+
+  const timeout = setTimeout(() => {
+    if (timer && isRunning) {
+      setTimer(timer - 1);
+    }
+  }, 1000);
+
+  const handlePlay = () => {
+    clearTimeout(timeout);
+    setIsRunning(!isRunning);
+  };
+
+  const reset = () => {
+    const audio = document.getElementById('beep');
+    if (!timer && timerLabel === 'Session') {
+      setTimer(breakLength * 60);
+      setTimerLabel('Break');
+      audio.play();
+    }
+    if (!timer && timerLabel === 'Break') {
+      setTimer(sessionLength * 60);
+      setTimerLabel('Session');
+      audio.stop();
+      audio.currentTime = 0;
+    }
+  };
+
+  // const timerLabel =
 
   return (
     <div id="App">
@@ -56,9 +93,9 @@ function App() {
             />
           </div>
           <div id="display">
-            <p id="timer-label">Session</p>
+            <p id="timer-label">{timerLabel}</p>
             <div id="time-left" className="numbers">
-              {timer}
+              {formatTimer()}
             </div>
           </div>
           <div id="session-label">
@@ -82,11 +119,26 @@ function App() {
         </div>
         <div id="buttons-2">
           <div id="start_stop">
-            <FontAwesomeIcon icon={faCirclePlay} />
-            <FontAwesomeIcon icon={faCirclePause} />
+            {isRunning ? (
+              <FontAwesomeIcon
+                icon={faCirclePause}
+                cursor="pointer"
+                onClick={handlePlay}
+              />
+            ) : (
+              <FontAwesomeIcon
+                icon={faCirclePlay}
+                cursor="pointer"
+                onClick={handlePlay}
+              />
+            )}
           </div>
           <div id="reset">
-            <FontAwesomeIcon icon={faArrowsRotate} />
+            <FontAwesomeIcon
+              icon={faArrowsRotate}
+              cursor="pointer"
+              onClick={reset}
+            />
           </div>
         </div>
       </div>

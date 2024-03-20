@@ -52,7 +52,7 @@ p {
   display: flex;
   justify-content: center;
   gap: 20px;
-  font-size: xx-large;
+  font-size: 40px;
 }
 
 .numbers {
@@ -71,13 +71,14 @@ p {
   width: 150px;
   align-self: center;
   padding: 10px;
+  margin-top: 20px;
 }
 
 #buttons-2 {
   display: flex;
   justify-content: center;
   gap: 60px;
-  font-size: xx-large;
+  font-size: 45px;
 }
 
 @media (max-width: 500px) {
@@ -94,7 +95,7 @@ p {
   #tomato {
     width: 370px;
     height: 300px;
-    gap: 20px;
+    gap: 10px;
   }
 
   h1 {
@@ -110,6 +111,7 @@ p {
   #buttons {
     gap: 0;
     font-size: xx-large;
+    margin-top: 10px;
   }
 
   .numbers {
@@ -118,11 +120,11 @@ p {
 
   #display {
     width: 80px;
-    margin-top: 15px;
+    margin-top: 10px;
   }
 
   #buttons-2 {
-    gap: 30px;
+    gap: 50px;
     font-size: xx-large;
   }
 }
