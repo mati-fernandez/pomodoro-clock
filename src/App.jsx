@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import './App.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -10,14 +10,27 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 
 function App() {
+  const [title, setTitle] = useState('25 + 5 Clock');
   const [breakLength, setBreakLength] = useState(5);
   const [sessionLength, setSessionLength] = useState(25);
-  const [timer, setTimer] = useState(1500);
-  const [isRunning, setIsRunning] = useState(false);
   const [timerLabel, setTimerLabel] = useState('Session');
+  const [timeLeft, setTimeLeft] = useState(sessionLength * 60);
+  const [isRunning, setIsRunning] = useState(false);
+  const [intervalID, setIntervalID] = useState(null);
+  const audioRef = useRef(null);
+
+  const handleTitle = () => {
+    if (title === '25 + 5 Clock') {
+      setTitle('Pomodoro Clock');
+    } else {
+      setTitle('25 + 5 Clock');
+    }
+  };
 
   const handleBreakDecrease = () => {
-    if (breakLength > 0 && !isRunning) setBreakLength(breakLength - 1);
+    if (breakLength > 1 && !isRunning) {
+      setBreakLength(breakLength - 1);
+    }
   };
 
   const handleBreakIncrease = () => {
@@ -25,54 +38,74 @@ function App() {
   };
 
   const handleSessionDecrease = () => {
-    if (sessionLength > 0 && !isRunning) setSessionLength(sessionLength - 1);
+    if (sessionLength > 1 && !isRunning) {
+      setSessionLength(sessionLength - 1);
+      setTimeLeft((sessionLength - 1) * 60);
+    }
   };
 
   const handleSessionIncrease = () => {
-    if (sessionLength < 60 && !isRunning) setSessionLength(sessionLength + 1);
-  };
-
-  const formatTimer = () => {
-    const minutes = Math.floor(timer / 60);
-    const seconds = timer - minutes * 60;
-    const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
-    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
-    return `${formattedMinutes}:${formattedSeconds}`;
-  };
-
-  const timeout = setTimeout(() => {
-    if (timer && isRunning) {
-      setTimer(timer - 1);
+    if (sessionLength < 60 && !isRunning) {
+      setSessionLength(sessionLength + 1);
+      setTimeLeft((sessionLength + 1) * 60);
     }
-  }, 1000);
+  };
 
   const handlePlay = () => {
-    clearTimeout(timeout);
-    setIsRunning(!isRunning);
+    if (!isRunning) {
+      setIsRunning(true);
+      const interval = setInterval(() => {
+        setTimeLeft((prevTimeLeft) => {
+          if (prevTimeLeft === 0) {
+            audioRef.current.play();
+            const labelState = setTimerLabel((prevTimerLabel) => {
+              if (prevTimerLabel === 'Session') {
+                return 'Break';
+              } else {
+                return 'Session';
+              }
+            });
+            if (labelState === 'Session') {
+              return breakLength * 60;
+            } else {
+              return sessionLength * 60;
+            }
+          } else {
+            return prevTimeLeft - 1;
+          }
+        });
+      }, 200);
+      setIntervalID(interval);
+    } else {
+      setIsRunning(false);
+      clearInterval(intervalID);
+    }
   };
 
-  const reset = () => {
-    const audio = document.getElementById('beep');
-    if (!timer && timerLabel === 'Session') {
-      setTimer(breakLength * 60);
-      setTimerLabel('Break');
-      audio.play();
-    }
-    if (!timer && timerLabel === 'Break') {
-      setTimer(sessionLength * 60);
-      setTimerLabel('Session');
-      audio.stop();
-      audio.currentTime = 0;
-    }
+  const handleReset = () => {
+    setBreakLength(5);
+    setSessionLength(25);
+    setTimerLabel('Session');
+    setTimeLeft(25 * 60);
+    setIsRunning(false);
+    clearInterval(intervalID);
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
   };
 
-  // const timerLabel =
+  const timeFormatter = () => {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    const formattedMinutes = minutes < 10 ? '0' + minutes : minutes;
+    const formattedSeconds = seconds < 10 ? '0' + seconds : seconds;
+    return `${formattedMinutes}:${formattedSeconds}`;
+  };
 
   return (
     <div id="App">
       <img src="leaf.png" id="leaf"></img>
       <div id="tomato">
-        <h1>25 + 5 Clock</h1>
+        <h1 onClick={handleTitle}>{title}</h1>
         <div id="buttons">
           <div id="break-label">
             <p>Break Length</p>
@@ -95,7 +128,7 @@ function App() {
           <div id="display">
             <p id="timer-label">{timerLabel}</p>
             <div id="time-left" className="numbers">
-              {formatTimer()}
+              {timeFormatter()}
             </div>
           </div>
           <div id="session-label">
@@ -137,12 +170,12 @@ function App() {
             <FontAwesomeIcon
               icon={faArrowsRotate}
               cursor="pointer"
-              onClick={reset}
+              onClick={handleReset}
             />
           </div>
         </div>
       </div>
-      <audio src="beep.mp3" preload="auto" id="beep"></audio>
+      <audio src="beep.mp3" preload="auto" id="beep" ref={audioRef}></audio>
     </div>
   );
 }
