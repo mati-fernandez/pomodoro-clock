@@ -40,14 +40,14 @@ function App() {
   const handleSessionDecrease = () => {
     if (sessionLength > 1 && !isRunning) {
       setSessionLength(sessionLength - 1);
-      setTimeLeft((sessionLength - 1) * 60);
+      //   setTimeLeft((sessionLength - 1) * 60);
     }
   };
 
   const handleSessionIncrease = () => {
     if (sessionLength < 60 && !isRunning) {
       setSessionLength(sessionLength + 1);
-      setTimeLeft((sessionLength + 1) * 60);
+      //   setTimeLeft((sessionLength + 1) * 60);
     }
   };
 
@@ -66,9 +66,9 @@ function App() {
               }
             });
             if (labelState === 'Session') {
-              return breakLength * 60;
-            } else {
               return sessionLength * 60;
+            } else {
+              return breakLength * 60;
             }
           } else {
             return prevTimeLeft - 1;
