@@ -56,6 +56,10 @@ p {
   font-size: 40px;
 }
 
+i {
+  cursor: pointer;
+}
+
 .numbers {
   font-size: xx-large;
 }

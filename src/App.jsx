@@ -1,13 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
 import './App.css';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {
-  faCircleChevronDown,
-  faCircleChevronUp,
-  faCirclePause,
-  faCirclePlay,
-  faArrowsRotate,
-} from '@fortawesome/free-solid-svg-icons';
 
 function App() {
   const [title, setTitle] = useState('25 + 5 Clock');
@@ -89,6 +81,8 @@ function App() {
     setTimerLabel('Session');
     setTimeLeft(25 * 60);
     setIsRunning(false);
+    audioRef.current.pause();
+    audioRef.current.currentTime = 0;
   };
 
   const timeFormatter = () => {
@@ -107,21 +101,19 @@ function App() {
         <div id="buttons">
           <div id="break-label">
             <p>Break Length</p>
-            <FontAwesomeIcon
+            <i
+              className="fa-solid fa-circle-chevron-up"
               id="break-increment"
-              icon={faCircleChevronUp}
-              cursor="pointer"
               onClick={handleBreakIncrease}
-            />
+            ></i>
             <div id="break-length" className="numbers">
               {breakLength}
             </div>
-            <FontAwesomeIcon
+            <i
+              className="fa-solid fa-circle-chevron-down"
               id="break-decrement"
-              icon={faCircleChevronDown}
-              cursor="pointer"
               onClick={handleBreakDecrease}
-            />
+            ></i>
           </div>
           <div id="display">
             <p id="timer-label">{timerLabel}</p>
@@ -131,37 +123,31 @@ function App() {
           </div>
           <div id="session-label">
             <p>Session Length</p>
-            <FontAwesomeIcon
+            <i
               id="session-increment"
-              icon={faCircleChevronUp}
-              cursor="pointer"
+              className="fa-solid fa-circle-chevron-up"
               onClick={handleSessionIncrease}
-            />
+            ></i>
             <div id="session-length" className="numbers">
               {sessionLength}
             </div>
-            <FontAwesomeIcon
+            <i
               id="session-decrement"
-              icon={faCircleChevronDown}
-              cursor="pointer"
+              className="fa-solid fa-circle-chevron-down"
               onClick={handleSessionDecrease}
-            />
+            ></i>
           </div>
         </div>
         <div id="buttons-2">
           <div id="start_stop" onClick={handlePlay}>
             {isRunning ? (
-              <FontAwesomeIcon icon={faCirclePause} cursor="pointer" />
+              <i className="fa-solid fa-circle-pause" />
             ) : (
-              <FontAwesomeIcon icon={faCirclePlay} cursor="pointer" />
+              <i className="fa-solid fa-circle-play" />
             )}
           </div>
           <div id="reset">
-            <FontAwesomeIcon
-              icon={faArrowsRotate}
-              cursor="pointer"
-              onClick={handleReset}
-            />
+            <i className="fa-solid fa-arrows-rotate" onClick={handleReset} />
           </div>
         </div>
       </div>
