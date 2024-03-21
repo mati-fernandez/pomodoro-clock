@@ -19,15 +19,27 @@ function App() {
   const audioRef = useRef(null);
 
   useEffect(() => {
+    if (!isRunning) return;
     const intervalID = setInterval(() => {
-      if (timeLeft && isRunning) {
-        setTimeLeft(timeLeft - 1);
-      }
+      setTimeLeft((t) => t - 1);
     }, 200);
-    resetTimer();
-    console.log('useEffect');
+    console.log('useEffect of isRunning');
     return () => clearInterval(intervalID);
-  }, [timeLeft, isRunning]);
+  }, [isRunning]);
+
+  useEffect(() => {
+    if (!timeLeft && timerLabel === 'Session') {
+      setTimeLeft(breakLength * 60);
+      setTimerLabel('Break');
+      audioRef.current.play();
+    }
+    if (!timeLeft && timerLabel === 'Break') {
+      setTimeLeft(sessionLength * 60);
+      setTimerLabel('Session');
+      audioRef.current.play();
+    }
+    console.log('useEffect of timeLeft');
+  }, [timeLeft]);
 
   const handleTitle = () => {
     if (title === '25 + 5 Clock') {
@@ -67,19 +79,6 @@ function App() {
 
   const handlePlay = () => {
     setIsRunning(!isRunning);
-  };
-
-  const resetTimer = () => {
-    if (!timeLeft && timerLabel === 'Session') {
-      setTimeLeft(breakLength * 60);
-      setTimerLabel('Break');
-      audioRef.current.play();
-    }
-    if (!timeLeft && timerLabel === 'Break') {
-      setTimeLeft(sessionLength * 60);
-      setTimerLabel('Session');
-      audioRef.current.play();
-    }
   };
 
   const handleReset = () => {
