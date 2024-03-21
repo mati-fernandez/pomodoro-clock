@@ -15,7 +15,7 @@ function App() {
     if (!isRunning) return;
     const intervalID = setInterval(() => {
       setTimeLeft((t) => t - 1);
-    }, 200);
+    }, 1000);
     return () => clearInterval(intervalID);
   }, [isRunning]);
 
