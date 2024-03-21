@@ -19,26 +19,28 @@ function App() {
   const audioRef = useRef(null);
 
   useEffect(() => {
+    console.log('useEffect of isRunning');
     if (!isRunning) return;
     const intervalID = setInterval(() => {
       setTimeLeft((t) => t - 1);
     }, 200);
-    console.log('useEffect of isRunning');
     return () => clearInterval(intervalID);
   }, [isRunning]);
 
   useEffect(() => {
-    if (!timeLeft && timerLabel === 'Session') {
-      setTimeLeft(breakLength * 60);
-      setTimerLabel('Break');
-      audioRef.current.play();
-    }
-    if (!timeLeft && timerLabel === 'Break') {
-      setTimeLeft(sessionLength * 60);
-      setTimerLabel('Session');
-      audioRef.current.play();
-    }
     console.log('useEffect of timeLeft');
+    if (!timeLeft) {
+      audioRef.current.play();
+      setTimerLabel((l) => {
+        if (l === 'Session') {
+          setTimeLeft(breakLength * 60);
+          return 'Break';
+        } else {
+          setTimeLeft(sessionLength * 60);
+          return 'Session';
+        }
+      });
+    }
   }, [timeLeft]);
 
   const handleTitle = () => {
