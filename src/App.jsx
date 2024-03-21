@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import './App.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
@@ -16,8 +16,18 @@ function App() {
   const [timerLabel, setTimerLabel] = useState('Session');
   const [timeLeft, setTimeLeft] = useState(sessionLength * 60);
   const [isRunning, setIsRunning] = useState(false);
-  const [intervalID, setIntervalID] = useState(null);
   const audioRef = useRef(null);
+
+  useEffect(() => {
+    const intervalID = setInterval(() => {
+      if (timeLeft && isRunning) {
+        setTimeLeft(timeLeft - 1);
+      }
+    }, 200);
+    resetTimer();
+    console.log('useEffect');
+    return () => clearInterval(intervalID);
+  }, [timeLeft, isRunning]);
 
   const handleTitle = () => {
     if (title === '25 + 5 Clock') {
@@ -30,55 +40,45 @@ function App() {
   const handleBreakDecrease = () => {
     if (breakLength > 1 && !isRunning) {
       setBreakLength(breakLength - 1);
+      if (timerLabel === 'Break') setTimeLeft((breakLength - 1) * 60);
     }
   };
 
   const handleBreakIncrease = () => {
-    if (breakLength < 60 && !isRunning) setBreakLength(breakLength + 1);
+    if (breakLength < 60 && !isRunning) {
+      setBreakLength(breakLength + 1);
+      if (timerLabel === 'Break') setTimeLeft((breakLength + 1) * 60);
+    }
   };
 
   const handleSessionDecrease = () => {
     if (sessionLength > 1 && !isRunning) {
       setSessionLength(sessionLength - 1);
-      //   setTimeLeft((sessionLength - 1) * 60);
+      if (timerLabel === 'Session') setTimeLeft((sessionLength - 1) * 60);
     }
   };
 
   const handleSessionIncrease = () => {
     if (sessionLength < 60 && !isRunning) {
       setSessionLength(sessionLength + 1);
-      //   setTimeLeft((sessionLength + 1) * 60);
+      if (timerLabel === 'Session') setTimeLeft((sessionLength + 1) * 60);
     }
   };
 
   const handlePlay = () => {
-    if (!isRunning) {
-      setIsRunning(true);
-      const interval = setInterval(() => {
-        setTimeLeft((prevTimeLeft) => {
-          if (prevTimeLeft === 0) {
-            audioRef.current.play();
-            const labelState = setTimerLabel((prevTimerLabel) => {
-              if (prevTimerLabel === 'Session') {
-                return 'Break';
-              } else {
-                return 'Session';
-              }
-            });
-            if (labelState === 'Session') {
-              return sessionLength * 60;
-            } else {
-              return breakLength * 60;
-            }
-          } else {
-            return prevTimeLeft - 1;
-          }
-        });
-      }, 200);
-      setIntervalID(interval);
-    } else {
-      setIsRunning(false);
-      clearInterval(intervalID);
+    setIsRunning(!isRunning);
+  };
+
+  const resetTimer = () => {
+    if (!timeLeft && timerLabel === 'Session') {
+      setTimeLeft(breakLength * 60);
+      setTimerLabel('Break');
+      audioRef.current.play();
+    }
+    if (!timeLeft && timerLabel === 'Break') {
+      setTimeLeft(sessionLength * 60);
+      setTimerLabel('Session');
+      audioRef.current.play();
     }
   };
 
@@ -88,9 +88,6 @@ function App() {
     setTimerLabel('Session');
     setTimeLeft(25 * 60);
     setIsRunning(false);
-    clearInterval(intervalID);
-    audioRef.current.pause();
-    audioRef.current.currentTime = 0;
   };
 
   const timeFormatter = () => {
@@ -151,19 +148,11 @@ function App() {
           </div>
         </div>
         <div id="buttons-2">
-          <div id="start_stop">
+          <div id="start_stop" onClick={handlePlay}>
             {isRunning ? (
-              <FontAwesomeIcon
-                icon={faCirclePause}
-                cursor="pointer"
-                onClick={handlePlay}
-              />
+              <FontAwesomeIcon icon={faCirclePause} cursor="pointer" />
             ) : (
-              <FontAwesomeIcon
-                icon={faCirclePlay}
-                cursor="pointer"
-                onClick={handlePlay}
-              />
+              <FontAwesomeIcon icon={faCirclePlay} cursor="pointer" />
             )}
           </div>
           <div id="reset">
