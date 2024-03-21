@@ -41,7 +41,7 @@ function App() {
         }
       });
     }
-  }, [timeLeft]);
+  }, [timeLeft, breakLength, sessionLength]);
 
   const handleTitle = () => {
     if (title === '25 + 5 Clock') {
